@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/ahmedalwardani/tinyapp/issues"
   },
-  "homepage": "https://github.com/ahmedalwardani/tinyapp#readme"
+  "homepage": "https://github.com/ahmedalwardani/tinyapp#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
 }
