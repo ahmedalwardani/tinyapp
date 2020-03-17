@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "./node_modules/.bin/nodemon -L express_server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -11,14 +12,18 @@
     "url": "git+https://github.com/ahmedalwardani/tinyapp.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Ahmed Alwardani, aalwa049@gmail.com",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/ahmedalwardani/tinyapp/issues"
   },
   "homepage": "https://github.com/ahmedalwardani/tinyapp#readme",
   "dependencies": {
+    "body-parser": "^1.19.0",
     "ejs": "^3.0.1",
     "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
   }
 }
