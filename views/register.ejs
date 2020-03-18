@@ -12,16 +12,20 @@
 
   <body>
     <%- include('partials/_header') %>
-    <h5 style="color: navy; margin-top: 10px;">
-      Welcome to TinyApp! Please fill in with your credentials below to start
-      using our awsome service!
-    </h5>
+    <h4
+      style="color: black; margin-top: 15px; margin-left: 15px; margin-bottom: 0px;"
+    >
+      Create Account
+    </h4>
     <form method="POST" style="margin-left: 2px; margin-top: 30px;">
-      <div class="form-group">
-        <label for="exampleInputEmail1">Email address:</label>
+      <div
+        class="form-group"
+        style="margin-left: 15px; margin-top: 0px; color: black;"
+      >
+        <label for="exampleInputEmail1">Email address</label>
         <input
           required
-          style="width: 110px;"
+          style="width: 200px; height: 30px;"
           type="email"
           class="form-control"
           id="exampleInputEmail1"
@@ -30,11 +34,14 @@
           name="email"
         />
       </div>
-      <div class="form-group">
-        <label for="exampleInputPassword1">Password:</label>
+      <div
+        class="form-group"
+        style="margin-left: 15px; margin-top: 0px; color: black;"
+      >
+        <label for="exampleInputPassword1">Password</label>
         <input
           required
-          style="width: 110px"
+          style="width: 200px; height: 30px;"
           type="password"
           class="form-control"
           id="exampleInputPassword1"
@@ -44,7 +51,8 @@
       </div>
       <div class="form-check"></div>
       <button
-        style="margin-top: 30px; background-color: green; color: white;"
+        class="btn btn-primary"
+        style="margin-top: 30px; margin-left: 15px; margin-top: 5px;"
         type="submit"
         class="btn btn-primary"
       >

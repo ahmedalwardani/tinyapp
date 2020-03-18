@@ -23,11 +23,11 @@ const generateRandomString = () => {
 };
 
 const isAvailable = (object, string) => {
-  let isAvailable = true;
+  let isAvailable = false;
   for (const obj in object) {
     if (object.hasOwnProperty(obj)) {
       if (object[obj].email === string) {
-        isAvailable = false;
+        isAvailable = true;
       }
     }
   }
@@ -57,7 +57,7 @@ const urlDatabase = {
 //POSTS
 app.post("/register", (req,res) => {
   const randomID = generateRandomString();
-  if (isAvailable(users, req.body.email)) {
+  if (!isAvailable(users, req.body.email)) {
     users[randomID] = {
       id: randomID,
       email:req.body.email,
@@ -72,6 +72,7 @@ app.post("/register", (req,res) => {
     if (users[randomID].email === "" || users[randomID].password === "") {
       res.statusCode = 400;
       res.send("Error: Please provide a valid username/password");
+      res.redirect("/login");
     } else {
       res.cookie("user_id", randomID);
       res.redirect("/urls");
@@ -93,7 +94,14 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 
 
 app.post("/login", (req, res) => {
-  res.redirect("/urls");
+  for (let key in users) {
+    if (users[key].email === req.body.email && users[key].password === req.body.password) {
+      res.cookie("user_id", users[key].id);
+      res.redirect("/urls");
+    }
+  }
+  res.statusCode = 403;
+  res.redirect("/login");
 });
 
 
