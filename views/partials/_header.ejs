@@ -18,20 +18,18 @@
         <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
       </div>
     </div>
-    <% if (username) { %>
-    <div class="spacing">Logged In As: <%=username%>!</div>
+
+    <% if (user) { %>
+    <div class="spacing">Logged In As: <%=user.email%>!</div>
     <form class="adjustment" action="/logout" method="POST">
       <button class="btn btn-outline-dark" type="submit">Logout</button>
     </form>
     <% } else { %>
-    <form class="adjustment form-inline" action="/login" method="POST">
-      <input
-        placeholder="Username"
-        class="form-control input-align"
-        name="username"
-      />
-      <button class="btn btn-outline-dark" type="submit">Login</button>
-    </form>
+    <a style="margin-right: 100px; color: #212529;" href="/login">Login</a>
+
+    <a style="margin-right: 100px; color: #212529;" href="/register"
+      >Register</a
+    >
     <% } %>
   </nav>
 </header>
