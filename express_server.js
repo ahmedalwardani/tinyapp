@@ -70,6 +70,12 @@ app.get("/set", (req, res) => {
   res.send(`a = ${a}`);
 });
 
+
+app.get("/register", (req, res) => {
+  let templateVars = {username: req.cookies["username"]};
+  res.render("register", templateVars);
+});
+
 app.get("/urls/new", (req, res) => {
   let templateVars = {username: req.cookies["username"]};
   res.render("urls_new", templateVars);
