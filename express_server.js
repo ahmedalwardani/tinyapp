@@ -49,8 +49,8 @@ const users = {
 };
 
 const urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com",
+  b2xVn2: {longURL:"http://www.lighthouselabs.ca", userID: "test1"},
+  qsm5xK: {longURL:"http://www.google.com", userID: "test2"}
 };
 
 
@@ -67,12 +67,10 @@ app.post("/register", (req,res) => {
     res.statusCode = 400;
     res.send("Error: The e-mail address you entered is already taken. Please enter another e-mail!");
   }
-
   if (users[randomID]) {
     if (users[randomID].email === "" || users[randomID].password === "") {
       res.statusCode = 400;
       res.send("Error: Please provide a valid username/password");
-      res.redirect("/login");
     } else {
       res.cookie("user_id", randomID);
       res.redirect("/urls");
@@ -81,8 +79,13 @@ app.post("/register", (req,res) => {
 });
 
 app.post("/urls", (req, res) => {
+  const currentUser = users[req.cookies["user_id"]];
   const testURL = generateRandomString();
-  urlDatabase[testURL] = req.body.longURL;
+  urlDatabase[testURL] = {
+    longURL: req.body.longURL,
+    userID: currentUser.id
+  };
+  console.log(urlDatabase);
   res.redirect(`/urls/${testURL}`);
 });
 
@@ -94,14 +97,20 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 
 
 app.post("/login", (req, res) => {
+  let insuccessful = true;
+
   for (let key in users) {
     if (users[key].email === req.body.email && users[key].password === req.body.password) {
       res.cookie("user_id", users[key].id);
       res.redirect("/urls");
+      insuccessful = false;
     }
   }
-  res.statusCode = 403;
-  res.redirect("/login");
+
+  if (insuccessful) {
+    res.statusCode = 403;
+    res.redirect("/login");
+  }
 });
 
 
@@ -146,8 +155,12 @@ app.get("/register", (req, res) => {
 
 app.get("/urls/new", (req, res) => {
   const currentUser = users[req.cookies["user_id"]];
-  let templateVars = {user: currentUser};
-  res.render("urls_new", templateVars);
+  if (currentUser) {
+    let templateVars = {user: currentUser};
+    res.render("urls_new", templateVars);
+  } else {
+    res.redirect("/login");
+  }
 });
 
 
@@ -159,14 +172,15 @@ app.get("/urls", (req, res) => {
 
 
 app.get("/u/:shortURL", (req, res) => {
-  const longURL = urlDatabase[req.params.shortURL];
+  const longURL = urlDatabase[req.params.shortURL].longURL;
   res.redirect(longURL);
 });
 
 
 app.get("/urls/:shortURL", (req, res) => {
   const currentUser = users[req.cookies["user_id"]];
-  let templateVars = {shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL], user:currentUser};
+  let templateVars = {shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL]["longURL"], user:currentUser};
+
   res.render("urls_show", templateVars);
 });
 
