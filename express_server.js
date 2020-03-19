@@ -35,6 +35,7 @@ const isAvailable = (object, string) => {
 };
 
 
+
 const users = {
   "userRandomID": {
     id: "userRandomID",
@@ -53,6 +54,16 @@ const urlDatabase = {
   qsm5xK: {longURL:"http://www.google.com", userID: "test2"}
 };
 
+
+const urlsForUser = id => {
+  const urlObject = {};
+  for (const key in urlDatabase) {
+    if (urlDatabase[key].userID === id) {
+      urlObject[key] = urlDatabase[key];
+    }
+  }
+  return urlObject;
+};
 
 //POSTS
 app.post("/register", (req,res) => {
@@ -85,14 +96,32 @@ app.post("/urls", (req, res) => {
     longURL: req.body.longURL,
     userID: currentUser.id
   };
-  console.log(urlDatabase);
   res.redirect(`/urls/${testURL}`);
 });
 
 
+app.post("/urls/:shortURL", (req, res) => {
+  const currentUser = users[req.cookies["user_id"]];
+  if (currentUser && urlDatabase[req.params.shortURL].userID === req.cookies["user_id"]) {
+    urlDatabase[req.params.shortURL].longURL = req.body.longURL;
+    res.redirect("/urls");
+  } else {
+    res.statusCode = 403;
+    res.send("error: access forbidden");
+  }
+});
+
+
 app.post("/urls/:shortURL/delete", (req, res) => {
-  delete urlDatabase[req.params.shortURL];
-  res.redirect("/urls");
+  const currentUser = users[req.cookies["user_id"]];
+  console.log(req.cookies);
+  if (currentUser && urlDatabase[req.params.shortURL].userID === req.cookies["user_id"]) {
+    delete urlDatabase[req.params.shortURL];
+    res.redirect("/urls");
+  } else {
+    res.statusCode = 403;
+    res.send("error: access forbidden");
+  }
 });
 
 
@@ -124,6 +153,7 @@ app.post("/logout", (req, res) => {
 //GETS
 app.get("/", (req, res) => {
   res.send("Hello!");
+  console.log(urlDatabase);
 });
 
 app.get("/urls.json", (req, res) => {
@@ -153,6 +183,14 @@ app.get("/register", (req, res) => {
   res.render("register", templateVars);
 });
 
+app.get("/urls", (req, res) => {
+  const currentUser = req.cookies["user_id"];
+  const userObject = users[currentUser];
+  const URLsObject = urlsForUser(currentUser);
+  const templateVars = {urls: URLsObject, user: userObject};
+  res.render("urls_index", templateVars);
+});
+
 app.get("/urls/new", (req, res) => {
   const currentUser = users[req.cookies["user_id"]];
   if (currentUser) {
@@ -164,13 +202,6 @@ app.get("/urls/new", (req, res) => {
 });
 
 
-app.get("/urls", (req, res) => {
-  const currentUser = users[req.cookies["user_id"]];
-  const templateVars = {urls: urlDatabase, user: currentUser};
-  res.render("urls_index", templateVars);
-});
-
-
 app.get("/u/:shortURL", (req, res) => {
   const longURL = urlDatabase[req.params.shortURL].longURL;
   res.redirect(longURL);
@@ -179,15 +210,15 @@ app.get("/u/:shortURL", (req, res) => {
 
 app.get("/urls/:shortURL", (req, res) => {
   const currentUser = users[req.cookies["user_id"]];
-  let templateVars = {shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL]["longURL"], user:currentUser};
-
-  res.render("urls_show", templateVars);
+  if (currentUser && urlDatabase[req.params.shortURL].userID === req.cookies["user_id"]) {
+    let templateVars = {shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL]["longURL"], user:currentUser};
+    res.render("urls_show", templateVars);
+  } else {
+    res.send("Please login or register");
+  }
 });
 
  
-// app.get("/fetch", (req, res) => {
-//   res.send(`a = ${a}`);
-// });
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`);
