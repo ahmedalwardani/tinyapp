@@ -17,14 +17,17 @@
     >
       Create Account
     </h4>
-    <form method="POST" style="margin-left: 2px; margin-top: 30px;">
+    <form
+      method="POST"
+      style="margin-left: 2px; margin-top: 30px;"
+      action="/register"
+    >
       <div
         class="form-group"
         style="margin-left: 15px; margin-top: 0px; color: black;"
       >
         <label for="exampleInputEmail1">Email address</label>
         <input
-          required
           style="width: 200px; height: 30px;"
           type="email"
           class="form-control"
@@ -40,7 +43,6 @@
       >
         <label for="exampleInputPassword1">Password</label>
         <input
-          required
           style="width: 200px; height: 30px;"
           type="password"
           class="form-control"

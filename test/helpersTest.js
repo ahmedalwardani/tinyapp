@@ -1,3 +1,4 @@
+/*This file contains Mocha and Chai tests for the getUserByEmail function*/
 const { assert } = require("chai");
 
 const { getUserByEmail } = require("../helpers.js");
